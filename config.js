@@ -1,0 +1,1 @@
+const CONFIG = { GOOGLE_SCRIPT_URL: "https://script.google.com/macros/s/AKfycby_-5vzWwb7-aiooH-Rq0WS9wpZW3rTGHROXZigJKicCJ6rXjbJAtdoRS7sW_P-yNDG/exec" };

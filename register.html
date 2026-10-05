@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Registration | Tech & Fun 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head>
+<body class="registration">
+<header class="topbar"><a class="logo" href="index.html"><span>TF</span><small>2026</small></a><nav class="topnav"><a href="index.html#events">EVENTS</a><a href="index.html#schedule">SCHEDULE</a></nav><a class="signin" href="index.html">← BACK</a></header>
+<main class="reg-wrap"><div class="reg-panel">
+<div class="reg-heading"><p class="mini" id="day"></p><h1 id="name">EVENT REGISTRATION</h1><p id="time"></p><div class="last">LAST DATE: <b>13 OCTOBER 2026</b><small>Registration remains open for late entries.</small></div></div>
+<form id="form">
+<input type="hidden" name="event" id="event">
+<div class="form-row"><label>PARTICIPANT 1 NAME<input name="participant1Name" required></label><label>PARTICIPANT 1 GMAIL<input type="email" name="participant1Email" placeholder="name@gmail.com" required></label></div>
+<div class="form-row"><label>PARTICIPANT 2 NAME<input name="participant2Name" required></label><label>PARTICIPANT 2 GMAIL<input type="email" name="participant2Email" placeholder="name@gmail.com" required></label></div>
+<label>MOBILE NUMBER<input id="mobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" required></label>
+<button id="submit" type="submit">SUBMIT REGISTRATION <span>↗</span></button>
+<p id="status"></p></form></div></main>
+<script src="config.js"></script><script>
+const E={
+chess:["CHESS","DAY 01 • NON-TECH","10:00 AM – 12:00 PM"],carrom:["CARROM","DAY 01 • NON-TECH","10:00 AM – 12:00 PM"],
+ludo:["LUDO","DAY 01 • NON-TECH","1:00 PM – 3:00 PM"],"bgmi-free-fire":["BGMI / FREE FIRE","DAY 01 • NON-TECH","1:00 PM – 3:00 PM"],
+"murder-mystery-treasure-hunt":["MURDER MYSTERY / TREASURE HUNT","DAY 01 • NON-TECH","3:00 PM – 5:00 PM"],
+"tug-of-war":["TUG OF WAR","DAY 01 • NON-TECH","3:00 PM – 5:00 PM"],"typing-speed":["TYPING SPEED","DAY 02 • TECH","10:00 AM – 12:00 PM"],
+"tech-escape-room":["TECH ESCAPE ROOM","DAY 02 • TECH","1:00 PM – 3:00 PM"],"code-debugging":["CODE DEBUGGING","DAY 02 • TECH","3:00 PM – 5:00 PM"]};
+const slug=new URLSearchParams(location.search).get("event"), x=E[slug]; if(!x) location.href="index.html";
+document.getElementById("name").textContent=x[0];document.getElementById("day").textContent=x[1];document.getElementById("time").textContent=x[2];document.getElementById("event").value=x[0];
+mobile.addEventListener("input",()=>mobile.value=mobile.value.replace(/\D/g,"").slice(0,10));
+form.addEventListener("submit",async e=>{e.preventDefault();let m=mobile.value,s=document.getElementById("status");if(!/^[6-9]\d{9}$/.test(m)){s.textContent="Enter a valid 10-digit Indian mobile number.";s.className="err";return}
+if(!CONFIG.GOOGLE_SCRIPT_URL||CONFIG.GOOGLE_SCRIPT_URL.includes("PASTE_")){s.textContent="Connect the Google Sheet backend in config.js first.";s.className="err";return}
+submit.disabled=true;submit.textContent="SUBMITTING...";
+try{let r=await fetch(CONFIG.GOOGLE_SCRIPT_URL,{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(form))),headers:{"Content-Type":"text/plain;charset=utf-8"}}),j=await r.json();if(!j.ok)throw Error();s.textContent="Registration submitted successfully.";s.className="ok";form.reset();event.value=x[0]}catch(a){s.textContent="Submission failed. Please try again.";s.className="err"}finally{submit.disabled=false;submit.innerHTML='SUBMIT REGISTRATION <span>↗</span>'}});
+</script></body></html>
