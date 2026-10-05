@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Registration | Tech & Fun 2026</title>
+<title>Freshers Party 2K26 | Registration</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="style.css"></head>
 <body class="registration">
 <header class="topbar"><a class="logo" href="index.html"><span>TF</span><small>2026</small></a><nav class="topnav"><a href="index.html#events">EVENTS</a><a href="index.html#schedule">SCHEDULE</a></nav><a class="signin" href="index.html">← BACK</a></header>
@@ -8,23 +8,109 @@
 <div class="reg-heading"><p class="mini" id="day"></p><h1 id="name">EVENT REGISTRATION</h1><p id="time"></p><div class="last">LAST DATE: <b>13 OCTOBER 2026</b><small>Registration remains open for late entries.</small></div></div>
 <form id="form">
 <input type="hidden" name="event" id="event">
-<div class="form-row"><label>PARTICIPANT 1 NAME<input name="participant1Name" required></label><label>PARTICIPANT 1 GMAIL<input type="email" name="participant1Email" placeholder="name@gmail.com" required></label></div>
-<div class="form-row"><label>PARTICIPANT 2 NAME<input name="participant2Name" required></label><label>PARTICIPANT 2 GMAIL<input type="email" name="participant2Email" placeholder="name@gmail.com" required></label></div>
-<label>MOBILE NUMBER<input id="mobile" name="mobile" type="tel" inputmode="numeric" maxlength="10" placeholder="10-digit mobile number" required></label>
+<div id="fields"></div>
 <button id="submit" type="submit">SUBMIT REGISTRATION <span>↗</span></button>
-<p id="status"></p></form></div></main>
+<p id="status"></p>
+</form></div></main>
 <script src="config.js"></script><script>
 const E={
-chess:["CHESS","DAY 01 • NON-TECH","10:00 AM – 12:00 PM"],carrom:["CARROM","DAY 01 • NON-TECH","10:00 AM – 12:00 PM"],
-ludo:["LUDO","DAY 01 • NON-TECH","1:00 PM – 3:00 PM"],"bgmi-free-fire":["BGMI / FREE FIRE","DAY 01 • NON-TECH","1:00 PM – 3:00 PM"],
-"murder-mystery-treasure-hunt":["MURDER MYSTERY / TREASURE HUNT","DAY 01 • NON-TECH","3:00 PM – 5:00 PM"],
-"tug-of-war":["TUG OF WAR","DAY 01 • NON-TECH","3:00 PM – 5:00 PM"],"typing-speed":["TYPING SPEED","DAY 02 • TECH","10:00 AM – 12:00 PM"],
-"tech-escape-room":["TECH ESCAPE ROOM","DAY 02 • TECH","1:00 PM – 3:00 PM"],"code-debugging":["CODE DEBUGGING","DAY 02 • TECH","3:00 PM – 5:00 PM"]};
-const slug=new URLSearchParams(location.search).get("event"), x=E[slug]; if(!x) location.href="index.html";
-document.getElementById("name").textContent=x[0];document.getElementById("day").textContent=x[1];document.getElementById("time").textContent=x[2];document.getElementById("event").value=x[0];
+chess:["CHESS","DAY 01 • NON-TECH","10:00 AM – 12:00 PM","single"],
+carrom:["CARROM","DAY 01 • NON-TECH","10:00 AM – 12:00 PM","single"],
+ludo:["LUDO","DAY 01 • NON-TECH","1:00 PM – 3:00 PM","single"],
+"bgmi-free-fire":["BGMI / FREE FIRE","DAY 01 • NON-TECH","1:00 PM – 3:00 PM","team4"],
+"murder-mystery-treasure-hunt":["MURDER MYSTERY / TREASURE HUNT","DAY 01 • NON-TECH","3:00 PM – 5:00 PM","team4"],
+"tug-of-war":["TUG OF WAR","DAY 01 • NON-TECH","3:00 PM – 5:00 PM","team4"],
+"typing-speed":["TYPING SPEED","DAY 02 • TECH","10:00 AM – 12:00 PM","single"],
+"tech-escape-room":["TECH ESCAPE ROOM","DAY 02 • TECH","1:00 PM – 3:00 PM","duo"],
+"code-debugging":["CODE DEBUGGING","DAY 02 • TECH","3:00 PM – 5:00 PM","single"]
+};
+
+const slug=new URLSearchParams(location.search).get("event"), x=E[slug];
+if(!x) location.href="index.html";
+
+document.getElementById("name").textContent=x[0];
+document.getElementById("day").textContent=x[1];
+document.getElementById("time").textContent=x[2];
+document.getElementById("event").value=x[0];
+
+const fields=document.getElementById("fields");
+
+function label(text,name,type="text",placeholder=""){
+  return `<label>${text}<input name="${name}" type="${type}" ${placeholder?`placeholder="${placeholder}"`:""} required></label>`;
+}
+
+if(x[3]==="single"){
+  fields.innerHTML=`
+    <div class="form-row">
+      ${label("PARTICIPANT NAME","participantName")}
+      ${label("GMAIL","participantEmail","email","name@gmail.com")}
+    </div>
+    ${label("MOBILE NUMBER","mobile","tel","10-digit mobile number")}
+    <p class="form-note">This is a <b>single-player event</b>. Only one participant is required.</p>`;
+}else if(x[3]==="duo"){
+  fields.innerHTML=`
+    ${label("TEAM NAME","teamName")}
+    <div class="member-title">PLAYER 1</div>
+    <div class="form-row">
+      ${label("PLAYER 1 NAME","player1Name")}
+      ${label("PLAYER 1 GMAIL","player1Email","email","name@gmail.com")}
+    </div>
+    <div class="member-title">PLAYER 2</div>
+    <div class="form-row">
+      ${label("PLAYER 2 NAME","player2Name")}
+      ${label("PLAYER 2 GMAIL","player2Email","email","name@gmail.com")}
+    </div>
+    ${label("CAPTAIN MOBILE NUMBER","mobile","tel","10-digit mobile number")}
+    <p class="form-note">This is a <b>2-player duo event</b>. Enter both players before submitting.</p>`;
+}else{
+  let members="";
+  for(let i=1;i<=4;i++){
+    members+=`<div class="member-title">PLAYER ${i}</div><div class="form-row">
+      ${label(`PLAYER ${i} NAME`,`player${i}Name`)}
+      ${label(`PLAYER ${i} GMAIL`,`player${i}Email`,"email","name@gmail.com")}
+    </div>`;
+  }
+  fields.innerHTML=`
+    ${label("TEAM / SQUAD NAME","teamName")}
+    ${members}
+    ${label("CAPTAIN MOBILE NUMBER","mobile","tel","10-digit mobile number")}
+    <p class="form-note">This is a <b>4-player team event</b>. Enter all four players before submitting.</p>`;
+}
+
+const mobile=document.getElementById("fields").querySelector('[name="mobile"]');
 mobile.addEventListener("input",()=>mobile.value=mobile.value.replace(/\D/g,"").slice(0,10));
-form.addEventListener("submit",async e=>{e.preventDefault();let m=mobile.value,s=document.getElementById("status");if(!/^[6-9]\d{9}$/.test(m)){s.textContent="Enter a valid 10-digit Indian mobile number.";s.className="err";return}
-if(!CONFIG.GOOGLE_SCRIPT_URL||CONFIG.GOOGLE_SCRIPT_URL.includes("PASTE_")){s.textContent="Connect the Google Sheet backend in config.js first.";s.className="err";return}
-submit.disabled=true;submit.textContent="SUBMITTING...";
-try{let r=await fetch(CONFIG.GOOGLE_SCRIPT_URL,{method:"POST",body:JSON.stringify(Object.fromEntries(new FormData(form))),headers:{"Content-Type":"text/plain;charset=utf-8"}}),j=await r.json();if(!j.ok)throw Error();s.textContent="Registration submitted successfully.";s.className="ok";form.reset();event.value=x[0]}catch(a){s.textContent="Submission failed. Please try again.";s.className="err"}finally{submit.disabled=false;submit.innerHTML='SUBMIT REGISTRATION <span>↗</span>'}});
+
+form.addEventListener("submit",async e=>{
+  e.preventDefault();
+  const m=mobile.value, s=document.getElementById("status");
+  if(!/^[6-9]\d{9}$/.test(m)){
+    s.textContent="Enter a valid 10-digit Indian mobile number.";
+    s.className="err"; return;
+  }
+  if(!CONFIG.GOOGLE_SCRIPT_URL||CONFIG.GOOGLE_SCRIPT_URL.includes("PASTE_")){
+    s.textContent="Connect the Google Sheet backend in config.js first.";
+    s.className="err"; return;
+  }
+  submit.disabled=true; submit.textContent="SUBMITTING...";
+  try{
+    const payload=Object.fromEntries(new FormData(form).entries());
+    const response=await fetch(CONFIG.GOOGLE_SCRIPT_URL,{
+      method:"POST",
+      body:JSON.stringify(payload),
+      headers:{"Content-Type":"text/plain;charset=utf-8"}
+    });
+    const result=await response.json();
+    if(!result.ok) throw Error(result.message||"Submission failed");
+    s.textContent="Registration submitted successfully.";
+    s.className="ok";
+    form.reset();
+    document.getElementById("event").value=x[0];
+  }catch(err){
+    s.textContent="Submission failed. Please try again.";
+    s.className="err";
+  }finally{
+    submit.disabled=false;
+    submit.innerHTML='SUBMIT REGISTRATION <span>↗</span>';
+  }
+});
 </script></body></html>
